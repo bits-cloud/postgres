@@ -4,7 +4,7 @@ docker run -it --rm \
 -v "${PWD}/docker/backup":/backup \
 -e POSTGRES_PASSWORD=secret \
 -e POSTGRES_USER=user \
--e POSTGRES_DATABASE=test-db \
+-e POSTGRES_DB=test-db \
 -e DUMP_STRATEGY=minimal \
 -e DUMP_TIME="* * * * *" \
 -e BASEBACKUP_TIME="*/5 * * * *" \

@@ -7,11 +7,11 @@ function dumpOldDatabase()
 {
   echo "-> CREATING A DUMP OF THE OLD DATABASE"
 
-  FILENAME="$(date +"%Y-%m-%d__%H:%M")__${POSTGRES_DATABASE}__v${PG_MAJOR_OLD}-to-v${PG_MAJOR}.tar"
+  FILENAME="$(date +"%Y-%m-%d__%H:%M")__${POSTGRES_DB}__v${PG_MAJOR_OLD}-to-v${PG_MAJOR}.tar"
 
   runuser --user postgres -- "${PG_BIN_OLD}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'" -w start
 
-  runuser --user postgres -- "${PG_BIN_OLD}/pg_dump" -f "${PG_BACKUP_DUMP}/${FILENAME}" --format=t --create --clean --if-exists --dbname="${POSTGRES_DATABASE}" --username=${POSTGRES_USER} --no-password
+  runuser --user postgres -- "${PG_BIN_OLD}/pg_dump" -f "${PG_BACKUP_DUMP}/${FILENAME}" --format=t --create --clean --if-exists --dbname="${POSTGRES_DB}" --username=${POSTGRES_USER} --no-password
 
   runuser --user postgres -- "${PG_BIN_OLD}/pg_ctl" -D "${PGDATA}"  -m fast -w stop
 }

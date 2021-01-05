@@ -16,10 +16,10 @@ echo "RESTORING DATABASE WITH DATA FROM ${PG_BACKUP_DUMP_RESTORE}"
 runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'" -w start
 
 # start with a clean database
-runuser --user postgres -- /usr/bin/dropdb --if-exists --username="${POSTGRES_USER}" --no-password "${POSTGRES_DATABASE}"
-runuser --user postgres -- /usr/bin/createdb --owner="${POSTGRES_USER}" --user="${POSTGRES_USER}" --no-password "${POSTGRES_DATABASE}"
+runuser --user postgres -- /usr/bin/dropdb --if-exists --username="${POSTGRES_USER}" --no-password "${POSTGRES_DB}"
+runuser --user postgres -- /usr/bin/createdb --owner="${POSTGRES_USER}" --user="${POSTGRES_USER}" --no-password "${POSTGRES_DB}"
 
-runuser --user postgres -- find "${PG_BACKUP_DUMP_RESTORE}" -type f -name "*.tar" -exec "${PG_BIN}/pg_restore" --create --clean --if-exists --dbname="${POSTGRES_DATABASE}" --username="${POSTGRES_USER}" --no-password "{}" \;
+runuser --user postgres -- find "${PG_BACKUP_DUMP_RESTORE}" -type f -name "*.tar" -exec "${PG_BIN}/pg_restore" --create --clean --if-exists --dbname="${POSTGRES_DB}" --username="${POSTGRES_USER}" --no-password "{}" \;
 rm -rf "${PG_BACKUP_DUMP_RESTORE}"/*
 
 runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast -w stop

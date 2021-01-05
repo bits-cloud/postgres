@@ -36,14 +36,14 @@ function PG_USER()
 
 function PG_DATABASE()
 {
-  if [ -z "$POSTGRES_DATABASE" ] 
+  if [ -z "$POSTGRES_DB" ] 
   then
-    echo "-> POSTGRES_DATABASE needs to have a value!"
+    echo "-> POSTGRES_DB needs to have a value!"
     echo "-> VALIDATION ABORTED"
     exit 4
   fi
 
-  echo "-> POSTGRES_DATABASE OK"
+  echo "-> POSTGRES_DB OK"
 }
 
 function ARCHIVE_MODE()

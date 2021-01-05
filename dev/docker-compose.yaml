@@ -9,7 +9,7 @@ services:
     environment:
       PGDATA: /var/lib/postgresql/data
       POSTGRES_USER: user
-      POSTGRES_DATABASE: test-db
+      POSTGRES_DB: test-db
       POSTGRES_PASSWORD: secret
       DUMP_STRATEGY: minimal
       DUMP_TIME: '* * * * *'

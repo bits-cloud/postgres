@@ -12,7 +12,7 @@ ENV RELEASE="focal" \
   \
   POSTGRES_USER= \
   POSTGRES_PASSWORD= \
-  POSTGRES_DATABASE= \
+  POSTGRES_DB= \
   POSTGRES_HOST_AUTH_METHOD="md5" \
   \
   # the docker default size of /dev/shm is 64MB

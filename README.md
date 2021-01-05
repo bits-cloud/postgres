@@ -73,7 +73,7 @@ pg_dump --format=t --create --clean --if-exists
 
 > - **POSTGRES_USER**: The Postgresql user
 > - **POSTGRES_PASSWORD**: The user password
-> - **POSTGRES_DATABASE**: The default database name
+> - **POSTGRES_DB**: The default database name
 > - **POSTGRES_HOST_AUTH_METHOD**: the authentication method for external connections.
 >   _default: 'md5'_
 

@@ -26,7 +26,7 @@ function init_db()
   # fix config before start
   /usr/local/bin/postgres-conf.sh
 
-  echo "-> DATABASE CREATED"
+  echo "-> DATABASE INITIALIZED"
 }
 
 function pg_hba_conf_setup()
@@ -45,8 +45,8 @@ function create_db()
 {
   runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'" -w start
 
-  runuser --user postgres -- /usr/bin/createdb --owner="${POSTGRES_USER}" --user="${POSTGRES_USER}" --no-password "${POSTGRES_DATABASE}"
-  echo "DATABASE ${POSTGRES_DATABASE} CREATED"
+  runuser --user postgres -- /usr/bin/createdb --owner="${POSTGRES_USER}" --user="${POSTGRES_USER}" --no-password "${POSTGRES_DB}"
+  echo "DATABASE ${POSTGRES_DB} CREATED"
 
   runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast -w stop
 }
