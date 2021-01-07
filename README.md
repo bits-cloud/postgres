@@ -9,6 +9,8 @@ This image will reduce the time spent to restore failed databases due to issues 
 
 _You should set [SHARED_BUFFERS](#variables) and [EFFECTIVE_CACHE_SIZE](#variables) to your needs. You can get more information in the repository under /dev/docker-compose.yaml or /dev/run.sh_
 
+A script for the startup-, lifeness and readniessprobe can be found und /usr/local/bin/probe.sh
+
 ### Upgrading
 
 just install a new postgres image.
