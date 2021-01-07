@@ -23,9 +23,9 @@ ENV RELEASE="focal" \
   ARCHIVE_MODE="on" \
   WAL_LEVEL="replica" \
   DUMP_STRATEGY="full" \
-  DATABASE_CHECK_TIME="45" \
+  DATABASE_CHECK_TIME="60" \
   \
-  ARCHIVE_COMMAND="test ! -f \/backup\/wal\/%f \&\& cp \%p \/backup\/wal\/%f" \
+  ARCHIVE_COMMAND="cp \%p \/backup\/wal\/%f" \
   RESTORE_COMMAND="cp \/backup\/wal\/%f %p" \
   \
   DUMP_TIME="0 * * * *" \

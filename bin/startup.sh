@@ -74,8 +74,9 @@ function restore()
     /usr/local/bin/restore-from-basebackup.sh
   else
     echo "DATABASE IS OK"
-    runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast  --wait --timeout="${DATABASE_CHECK_TIME}" --silent stop
   fi
+  
+  runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast  --wait --timeout="${DATABASE_CHECK_TIME}" --silent stop
 
   /usr/local/bin/restore-from-restore-folder.sh
 
