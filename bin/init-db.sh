@@ -43,12 +43,12 @@ function pg_hba_conf_setup()
 
 function create_db()
 {
-  runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'" -w start
+  runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'"  --wait --timeout="${DATABASE_CHECK_TIME}" --silent --log=/dev/null start
 
   runuser --user postgres -- /usr/bin/createdb --owner="${POSTGRES_USER}" --user="${POSTGRES_USER}" --no-password "${POSTGRES_DB}"
   echo "DATABASE ${POSTGRES_DB} CREATED"
 
-  runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast -w stop
+  runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast --wait --timeout="${DATABASE_CHECK_TIME}" --silent stop
 }
 
 create_db_directories

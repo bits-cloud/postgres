@@ -6,18 +6,21 @@ services:
     tty: true
     stdin_open: true
     # command: /bin/bash # to stop the container from starting supervisord
+    shm_size: '256MB' # set this so we can increase the shared buffers for postgres
     environment:
-      PGDATA: /var/lib/postgresql/data
       POSTGRES_USER: user
       POSTGRES_DB: test-db
       POSTGRES_PASSWORD: secret
       DUMP_STRATEGY: minimal
       DUMP_TIME: '* * * * *'
+      ZFS_OPTIONS: 'on'
       BASEBACKUP_TIME: '*/5 * * * *'
+      SHARED_BUFFERS: 256MB
+      EFFECTIVE_CACHE_SIZE: 3GB
     volumes:
       - '${PWD}/docker/postgres:/postgres'
       - '${PWD}/docker/backup:/backup'
     ports:
-      - 5432:5422 # postgres
+      - '5432:5432' # postgres
     networks:
       - default

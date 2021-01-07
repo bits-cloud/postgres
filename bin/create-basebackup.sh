@@ -14,10 +14,18 @@ NEW_BACKUP="${PG_BACKUP_BASEBACKUP}-new"
 # first delete the old files
 rm -rf "${OLD_BACKUP}"
 rm -rf "${NEW_BACKUP}"
+rm -rf "${PGDATA}/backup_label.old" "${PGDATA}/backup_label"
 
 echo "-> CREATEING BASEBACKUP"
 runuser --user postgres -- pg_basebackup --username="${POSTGRES_USER}" --no-password --pgdata="${NEW_BACKUP}" --wal-method=stream # --format=t
 
+if [ "$?" -gt 0 ] 
+then
+  echo "ERROR CREATING BASEBACKUP. STARTING AGAIN IN 120 SECONDS"
+  sleep 120
+  /usr/local/bin/create-basebackup.sh
+  exit 1
+fi
 
 # second move default files to old and new to default
 # this delete old files (costly operation)
@@ -37,6 +45,3 @@ LATEST_BACKUP_WAL=$(head -1 ${PG_BACKUP_BASEBACKUP}/backup_label | awk '{ split(
 
 pg_archivecleanup "${PG_BACKUP_WAL}" "${LATEST_BACKUP_WAL}"
 find "${PG_BACKUP_WAL}" -name "*.backup" -exec rm {} \; # delete all .backup files
-
-# delete old .backup files
-find "${PG_BACKUP_WAL}" ! -newer "${PG_BACKUP_WAL}/${LATEST_BACKUP_WAL}" ! -name "${LATEST_BACKUP_WAL}" -delete

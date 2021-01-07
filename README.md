@@ -1,9 +1,13 @@
-# evokom Postgres-upgrade-backup
+# evokom/Postgres
+
+The Repository can be found [here](https://github.com/evokom/postgres)
 
 This is a postgres docker image, that is built to keep your data safe.
 This image will have two versions of postgres installed, to allow an upgrade between Postgres Versions.
 The purpose make upgrading / restoreing a failed database as easy as possible.
 This image will reduce the time spent to restore failed databases due to issues with shared Storage or crashed Kubernetes Clusters.
+
+_You should set [SHARED_BUFFERS](#variables) and [EFFECTIVE_CACHE_SIZE](#variables) to your needs. You can get more information in the repository under /dev/docker-compose.yaml or /dev/run.sh_
 
 ### Upgrading
 
@@ -64,9 +68,9 @@ pg_dump --format=t --create --clean --if-exists
 
 **CRONJOBS**
 
-> - **DUMP_TIME**: The time, when a database dump is created. default is every hour.
+> - **DUMP_TIME**: The time, when a database dump is created. default is every hour.  
 >   _default: "0 \* \* \* \*"_
-> - **BASEBACKUP_TIME**: The time, when a basebackup of the database is created. default is every day.
+> - **BASEBACKUP_TIME**: The time, when a basebackup of the database is created. default is every day.  
 >   _default: "0 0 \* \* \*"_
 
 **DATABASE**
@@ -74,21 +78,32 @@ pg_dump --format=t --create --clean --if-exists
 > - **POSTGRES_USER**: The Postgresql user
 > - **POSTGRES_PASSWORD**: The user password
 > - **POSTGRES_DB**: The default database name
-> - **POSTGRES_HOST_AUTH_METHOD**: the authentication method for external connections.
+> - **POSTGRES_HOST_AUTH_METHOD**: the authentication method for external connections.  
 >   _default: 'md5'_
 
 > - **DUMP_STRATEGY**: "full", "compact" or "minimal
 >   see [dumps](#dumps) for a description of the strategies
+> - **DATABASE_CHECK_TIME**: time in seconds to wait, before the scripts determine the database to be defect.  
+>   This value should not be to low or to high, to guarantee the database could try to repair itself, before the restore-from-basebackup will be executed.  
+>   _default: 45_
 
 > ---
 
 **CONFIG**
+
 _BASE_
 
-> - **SHARED_BUFFERS**: https://postgresqlco.nf/doc/en/param/shared_buffers/ > _default: 64MB - the default shared-memory for docker-containers_
-> - **EFFECTIVE_CACHE_SIZE**: https://postgresqlco.nf/doc/en/param/effective_cache_size/ > _default: 2GB_
+> - **SHARED_BUFFERS**: https://postgresqlco.nf/doc/en/param/shared_buffers/  
+>   _default: 64MB - the default shared-memory for docker-containers_
+> - **EFFECTIVE_CACHE_SIZE**: https://postgresqlco.nf/doc/en/param/effective_cache_size/  
+>   _default: 2GB_
 
 _ARCHIVING_
 
-> - **ARCHIVE_MODE**: https://postgresqlco.nf/doc/en/param/archive_mode/ > _default: on_ > _this images uses uses archive_command instead of the recommended pg_receivewal to keep switch archiving on
->   / off simple_
+> - **ARCHIVE_MODE**: https://postgresqlco.nf/doc/en/param/archive_mode/  
+>   _default: on_  
+>   _this images uses uses archive_command instead of the recommended pg_receivewal to keep switch archiving on / off simple_
+
+_ZFS_OPTIONS_
+
+> - **ZFS_OPTIONS**: if ENV Variable is set to 'on', it will set **wal_recycle** and **wal_init_zero** to off, to improve zfs performance

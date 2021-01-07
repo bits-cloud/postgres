@@ -20,7 +20,7 @@ function validate()
 
   echo "VALIDATION COMPLETED!"
   echo "================================================"
-  echo
+  echo ""
 }
 
 function environment_setup()
@@ -32,7 +32,7 @@ function postgres_setup()
 {
   # create database if it does not exist 
   # -> PG_VERSION is always in the database directory
-  if ! [ -f "${PGDATA}/PG_VERSION" ]
+  if [ ! -f "${PGDATA}/PG_VERSION" ]
   then
     echo "INITIALIZING DATABASE"
     /usr/local/bin/init-db.sh
@@ -47,7 +47,7 @@ function postgres_setup()
   /usr/local/bin/postgres-conf.sh
 
   echo "================================================"
-  echo
+  echo ""
 }
 
 function upgrade()
@@ -61,12 +61,12 @@ function upgrade()
   fi
 
   echo "================================================"
-  echo
+  echo ""
 }
 
 function restore()
 {
-  runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'" -w start
+  runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'"  --wait --timeout="${DATABASE_CHECK_TIME}" --silent --log=/dev/null start
 
   if [ "$?" -gt 0 ] 
   then
@@ -74,13 +74,13 @@ function restore()
     /usr/local/bin/restore-from-basebackup.sh
   else
     echo "DATABASE IS OK"
-    runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast -w stop
+    runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast  --wait --timeout="${DATABASE_CHECK_TIME}" --silent stop
   fi
 
   /usr/local/bin/restore-from-restore-folder.sh
 
   echo "================================================"
-  echo
+  echo ""
 }
 
 validate

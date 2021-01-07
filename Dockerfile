@@ -18,10 +18,12 @@ ENV RELEASE="focal" \
   # the docker default size of /dev/shm is 64MB
   SHARED_BUFFERS="64MB" \
   EFFECTIVE_CACHE_SIZE="2GB" \
+  ZFS_OPTIONS='off' \
   \
   ARCHIVE_MODE="on" \
   WAL_LEVEL="replica" \
   DUMP_STRATEGY="full" \
+  DATABASE_CHECK_TIME="45" \
   \
   ARCHIVE_COMMAND="test ! -f \/backup\/wal\/%f \&\& cp \%p \/backup\/wal\/%f" \
   RESTORE_COMMAND="cp \/backup\/wal\/%f %p" \
@@ -89,6 +91,5 @@ STOPSIGNAL SIGINT
 EXPOSE 5432
 VOLUME /postgres
 VOLUME /backup
-VOLUME /init
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
