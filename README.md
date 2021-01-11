@@ -63,11 +63,11 @@ this can also be used to restore from another database.
 the dump this image creates is created with the following parameters:
 
 ```
---create --clean --if-exists
+--format=t
 ```
 
-**BE CAREFUL BECAUSE THIS OPTION WILL ALSO REMOVE EVERY WAL AND THE BASEBACKUP**
-**ONlY USE THIS AS A LAST RESORT OR TO INIT A NEW DATABASE**
+**BE CAREFUL BECAUSE THIS OPTION WILL ALSO REMOVE EVERY WAL AND THE BASEBACKUP.**
+**ONLY USE THIS AS A LAST RESORT OR TO INIT A NEW DATABASE**
 
 ### Variables
 

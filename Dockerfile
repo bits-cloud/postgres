@@ -1,8 +1,8 @@
 FROM ubuntu:focal
 
 ENV RELEASE="focal" \
-  PG_MAJOR=12 \
-  PG_MAJOR_OLD=11 \
+  PG_MAJOR=13 \
+  PG_MAJOR_OLD=12 \
   PGDATA="/postgres/data" \
   \
   PG_BACKUP_WAL="/backup/wal" \
