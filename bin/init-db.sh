@@ -1,5 +1,36 @@
 #!/bin/bash
 
+HELP="
+This script initializes a new Postgres Database in the \$PGDATA (current: $PGDATA) Folder.
+The User is taken from the variable \$POSTGRES_USER and the Password from \$POSTGRES_PASSWORD
+
+An Initial DB can be created if this script is called with the \"--create-db=<DB_NAME>\" flag.
+"
+CREATE_DATABASE="true"
+
+POSITIONAL=()
+while [[ $# > 0 ]]; do
+  case "$1" in
+    -h|--help)
+    echo "${HELP}"
+    exit 0
+    shift # shift once since flags have no values
+    ;;
+    --no-create-db)
+    CREATE_DATABASE="false"
+    shift
+    ;;
+    *) # unknown flag/switch
+    POSITIONAL+=("$1")
+    shift
+    ;;
+  esac
+done
+
+set -- "${POSITIONAL[@]}" # restore positional params
+
+
+
 function create_db_directories()
 {
   mkdir -p "$PGDATA"
@@ -46,7 +77,7 @@ function create_db()
   runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'"  --wait --timeout="${DATABASE_CHECK_TIME}" --silent --log=/dev/null start
 
   runuser --user postgres -- /usr/bin/createdb --owner="${POSTGRES_USER}" --user="${POSTGRES_USER}" --no-password "${POSTGRES_DB}"
-  echo "DATABASE ${POSTGRES_DB} CREATED"
+  echo "-> DATABASE ${POSTGRES_DB} CREATED"
 
   runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -m fast --wait --timeout="${DATABASE_CHECK_TIME}" --silent stop
 }
@@ -54,4 +85,8 @@ function create_db()
 create_db_directories
 init_db
 pg_hba_conf_setup
-create_db
+
+if [  "${CREATE_DATABASE}" = "true" ] 
+then
+  create_db
+fi

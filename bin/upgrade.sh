@@ -11,7 +11,7 @@ function dumpOldDatabase()
 
   runuser --user postgres -- "${PG_BIN_OLD}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'"  --wait --timeout="${DATABASE_CHECK_TIME}" --silent --log=/dev/null start
 
-  runuser --user postgres -- "${PG_BIN_OLD}/pg_dump" -f "${PG_BACKUP_DUMP}/${FILENAME}" --format=t --create --clean --if-exists --dbname="${POSTGRES_DB}" --username=${POSTGRES_USER} --no-password
+  runuser --user postgres -- "${PG_BIN_OLD}/pg_dump" -f "${PG_BACKUP_DUMP}/${FILENAME}" --format=t --dbname="${POSTGRES_DB}" --username=${POSTGRES_USER} --no-password
 
   runuser --user postgres -- "${PG_BIN_OLD}/pg_ctl" -D "${PGDATA}"  -m fast  --wait --timeout="${DATABASE_CHECK_TIME}" --silent stop
 }
@@ -25,7 +25,7 @@ function upgrade()
   rm -rf "${PG_BACKUP_BASEBACKUP}"
   
   echo "INIT A NEW DB WITH VERSION ${PG_MAJOR}"
-  /usr/local/bin/init-db.sh
+  /usr/local/bin/init-db.sh --no-create-db
   /usr/local/bin/postgres-conf.sh
 
   echo "-> EXECUTING THE UPGRADE"
@@ -35,6 +35,12 @@ function upgrade()
 
   runuser --user postgres -- pg_upgrade --old-bindir="${PG_BIN_OLD}" --new-bindir="${PG_BIN}" --old-datadir="${PGDATA_OLD}" --new-datadir="${PGDATA}" --user="${POSTGRES_USER}" --link
 
+  if [ "$?" -gt 0 ] 
+  then
+    "ERROR UPGRADING THE DATABASE - MANUAL ACTION REQUIRED"
+    exit 2
+  fi
+
   echo "-> ANALYZING NEW CLUSTER"
   runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}" -o "-c listen_addresses='' -p '5432'"  --wait --timeout="${DATABASE_CHECK_TIME}" --silent --log=/dev/null start
 
@@ -43,7 +49,7 @@ function upgrade()
   runuser --user postgres -- "${PG_BIN}/pg_ctl" -D "${PGDATA}"  -m fast  --wait --timeout="${DATABASE_CHECK_TIME}" --silent stop
 
   echo "-> DELETING OLD CLUSTER"
-  rm -rf "${PGDATA_OLD}" todo: uncomment
+  rm -rf "${PGDATA_OLD}"
   find /postgres -maxdepth 1 -type f -exec rm {} \;
 
   cd /

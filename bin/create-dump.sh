@@ -11,7 +11,7 @@ cd /
 FILENAME="$(date +"%Y-%m-%d__%H:%M")__${POSTGRES_DB}.tar"
 
 echo "-> CREATE DATABASE DUMP ${PG_BACKUP_DUMP}/${FILENAME}"
-runuser --user postgres -- pg_dump -f "${PG_BACKUP_DUMP}/${FILENAME}" --format=t --create --clean --if-exists --dbname="${POSTGRES_DB}" --username=${POSTGRES_USER} --no-password
+runuser --user postgres -- pg_dump -f "${PG_BACKUP_DUMP}/${FILENAME}" --format=t --dbname="${POSTGRES_DB}" --username=${POSTGRES_USER} --no-password
 
 echo "-> DELETE OLD BACKUPS WITH STRATEGY: ${DUMP_STRATEGY}"
 if [ "${DUMP_STRATEGY}" = "full" ]

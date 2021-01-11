@@ -63,8 +63,11 @@ this can also be used to restore from another database.
 the dump this image creates is created with the following parameters:
 
 ```
-pg_dump --format=t --create --clean --if-exists
+--create --clean --if-exists
 ```
+
+**BE CAREFUL BECAUSE THIS OPTION WILL ALSO REMOVE EVERY WAL AND THE BASEBACKUP**
+**ONlY USE THIS AS A LAST RESORT OR TO INIT A NEW DATABASE**
 
 ### Variables
 

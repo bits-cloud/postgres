@@ -43,5 +43,9 @@ echo "-> DELETE OLD WAL's"
 # read the latest wal id from backup_label file
 LATEST_BACKUP_WAL=$(head -1 ${PG_BACKUP_BASEBACKUP}/backup_label | awk '{ split($NF, wal, /)/); print wal[1]; }')
 
-pg_archivecleanup "${PG_BACKUP_WAL}" "${LATEST_BACKUP_WAL}"
-find "${PG_BACKUP_WAL}" -name "*.backup" -exec rm {} \; # delete all .backup files
+if [ -n "${LATEST_BACKUP_WAL}" ]; then
+  pg_archivecleanup "${PG_BACKUP_WAL}" "${LATEST_BACKUP_WAL}"
+  find "${PG_BACKUP_WAL}" -name "*.backup" -exec rm {} \; # delete all .backup files 
+else
+  echo "ERROR WHEN READING LATEST WAL FILE FROM ${PG_BACKUP_BASEBACKUP}/backup_label"
+fi
