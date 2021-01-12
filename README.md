@@ -4,7 +4,7 @@ The Repository can be found [here](https://github.com/evokom/postgres)
 
 This is a postgres docker image, that is built to keep your data safe.
 This image will have two versions of postgres installed, to allow an upgrade between Postgres Versions.
-The purpose make upgrading / restoreing a failed database as easy as possible.
+The purpose is to make upgrading / restoreing a failed database as easy as possible.
 This image will reduce the time spent to restore failed databases due to issues with shared Storage or crashed Kubernetes Clusters.
 
 _You should set [SHARED_BUFFERS](#variables) and [EFFECTIVE_CACHE_SIZE](#variables) to your needs. You can get more information in the repository under /dev/docker-compose.yaml or /dev/run.sh_
