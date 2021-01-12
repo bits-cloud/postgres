@@ -1,4 +1,4 @@
-# evokom/Postgres
+# evokom/postgres
 
 The Repository can be found [here](https://github.com/evokom/postgres)
 
@@ -22,7 +22,7 @@ if within the /postgres volume is a directory with the older version name, the f
 
 ### backups
 
-These steps will only be executed, if the ENV-VAR "ARCHIVE_MODE" is 'on'
+These steps will only be executed, if _[ARCHIVE_MODE](#variables)_ is 'on'
 
 #### basebackup
 
@@ -66,31 +66,34 @@ the dump this image creates is created with the following parameters:
 --format=t
 ```
 
-**BE CAREFUL BECAUSE THIS OPTION WILL ALSO REMOVE EVERY WAL AND THE BASEBACKUP.**
-**ONLY USE THIS AS A LAST RESORT OR TO INIT A NEW DATABASE**
+_BE CAREFUL BECAUSE THIS OPTION WILL ALSO REMOVE EVERY WAL AND THE BASEBACKUP._
+_ONLY USE THIS AS A LAST RESORT OR TO INIT A NEW DATABASE_
 
 ### Variables
 
 **CRONJOBS**
 
 > - **DUMP_TIME**: The time, when a database dump is created. default is every hour.  
->   _default: "0 \* \* \* \*"_
+>   _[optional, default: "0 \* \* \* \*"](#)_
 > - **BASEBACKUP_TIME**: The time, when a basebackup of the database is created. default is every day.  
->   _default: "0 0 \* \* \*"_
+>   _[optional, default: "0 0 \* \* \*"](#)_
 
 **DATABASE**
 
-> - **POSTGRES_USER**: The Postgresql user
-> - **POSTGRES_PASSWORD**: The user password
-> - **POSTGRES_DB**: The default database name
+> - **POSTGRES_USER**: The Postgresql user.  
+>   _[required](#)_
+> - **POSTGRES_PASSWORD**: The user password.  
+>   _[required](#)_
+> - **POSTGRES_DB**: The default database name.  
+>   _[required](#)_
 > - **POSTGRES_HOST_AUTH_METHOD**: the authentication method for external connections.  
->   _default: 'md5'_
+>   _[optional, default: 'md5'](#)_
 
-> - **DUMP_STRATEGY**: "full", "compact" or "minimal
->   see [dumps](#dumps) for a description of the strategies
+> - **DUMP_STRATEGY**: "full", "compact" or "minimal.  
+>   _[optional, default: full](#dumps)_
 > - **DATABASE_CHECK_TIME**: time in seconds to wait, before the scripts determine the database to be defect.  
 >   This value should not be to low or to high, to guarantee the database could try to repair itself, before the restore-from-basebackup will be executed.  
->   _default: 45_
+>   _[optional, default: 45](#)_
 
 > ---
 
@@ -98,17 +101,18 @@ the dump this image creates is created with the following parameters:
 
 _BASE_
 
-> - **SHARED_BUFFERS**: https://postgresqlco.nf/doc/en/param/shared_buffers/  
->   _default: 64MB - the default shared-memory for docker-containers_
-> - **EFFECTIVE_CACHE_SIZE**: https://postgresqlco.nf/doc/en/param/effective_cache_size/  
->   _default: 2GB_
+> - **SHARED_BUFFERS**: Sets the number of shared memory buffers used by the server.  
+>   _[optional, default: 64MB (the default shared-memory for docker-containers - SHOULD BE INCREASED)](https://postgresqlco.nf/doc/en/param/shared_buffers/)_
+> - **EFFECTIVE_CACHE_SIZE**: Sets the planner's assumption about the total size of the data caches.  
+>   _[optional, default: 2GB](https://postgresqlco.nf/doc/en/param/effective_cache_size/)_
 
 _ARCHIVING_
 
-> - **ARCHIVE_MODE**: https://postgresqlco.nf/doc/en/param/archive_mode/  
->   _default: on_  
->   _this images uses uses archive_command instead of the recommended pg_receivewal to keep switch archiving on / off simple_
+> - **ARCHIVE_MODE**: Allows archiving of WAL files using archive command.  
+>   _[optional, default: on](https://postgresqlco.nf/doc/en/param/archive_mode/)_  
+>    _this images uses uses archive_command instead of the recommended pg_receivewal to keep switch archiving on / off simple_
 
 _ZFS_OPTIONS_
 
-> - **ZFS_OPTIONS**: if ENV Variable is set to 'on', it will set **wal_recycle** and **wal_init_zero** to off, to improve zfs performance
+> - **ZFS_OPTIONS**: if ENV Variable is set to 'on', it will set **wal_recycle** and **wal_init_zero** to off, to improve zfs performance.  
+>   _[optional, default: off](https://postgresqlco.nf/doc/en/param/wal_recycle/)_
